@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+{% block content %}
+<script>
+const options = {
+  clean: true,
+}
+const client = mqtt.connect("ws://{{ user.broker_addr }}:{{ user.broker_port }}")
+
+client.on('connect', () => {
+  console.log("OK")
+})
+
+{% for device in devices %}
+client.subscribe("ZigbeeD894/{{ device.ieee_addr }}")
+{% endfor %}
+
+client.on("message", (topic, payload) => {
+  const data = JSON.parse(payload)
+  console.log([topic, payload].join(": "))
+  $(document.getElementById('device'+topic.replace("/", "_"))).html('')
+  for(let i in data) {
+    $(document.getElementById('device'+topic.replace("/", "_"))).append(`<p>${i}: ${data[i]}</p>`)
+  }
+})
+
+</script>
+{% with messages = get_flashed_messages(with_categories=true) %}
+		{% if messages %}
+			{% for categories, message in messages %}
+            	<div class="alert alert-{{ categories }} alert-dismissible fade show" role="alert">
+  					{{ message }}
+					<button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+  					</button>
+				</div>
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+	<div class="container-sm p-3">
+		<h1>Devices</h1>
+		<form method="POST" action="">
+			{{ form.hidden_tag() }}
+  			<div class="form-group pb-2">
+				<label for="DeviceInput">Device IEEE</label>
+				{% if form.ieee_addr.error %}
+					{{ form.ieee_addr(class="form-control is-invalid", placeholder="type ( e.x. 0x1234ABCD... )", id="DeviceInput") }}
+					<div class="invalid-feedback">
+					{% for error in form.ieee_addr.errors %}
+						<span>{{ error }}</span>
+					{% endfor %}
+					</div>
+				{% else %}
+				{{ form.ieee_addr(class="form-control", placeholder="type ( e.x. 0x1234ABCD... )") }}
+				{% endif %}
+  			</div>
+			{{ form.add(class="btn btn-primary", type="submit") }}
+			{{ form.remove(class="btn btn-danger", type="submit") }}
+		</form>
+		<div class="accordion shadow pt-2" id="accordionPanelsStayOpen">
+			{% for device in devices %}
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="panelsStayOpen-heading{{ device.ieee_addr }}">
+			  			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{ device.ieee_addr }}" aria-expanded="false" aria-controls="panelsStayOpen-collapse{{ device.ieee_addr }}">
+							{{ device.ieee_addr }}
+			  			</button>
+					</h2>
+					<div id="panelsStayOpen-collapse{{ device.ieee_addr }}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading{{ device.ieee_addr }}">
+			  			<div class="accordion-body" id="deviceZigbeeD894_{{ device.ieee_addr }}">
+							Waiting for response...
+			  			</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}

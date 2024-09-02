@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block content %}
+	{% with messages = get_flashed_messages(with_categories=true) %}
+		{% if messages %}
+			{% for categories, message in messages %}
+            	<div class="alert alert-{{ categories }} alert-dismissible fade show" role="alert">
+  					{{ message }}
+					<button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+  					</button>
+				</div>
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+	<div class="container-sm p-3">
+		<h1>Domoticz</h1>
+		<form method="POST" action="">
+			{{ form.hidden_tag() }}
+  			<div class="form-group pb-2">
+				{{ form.addr.label(class="form-control-label") }}
+				{% if form.addr.error %}
+					{{ form.addr(class="form-control is-invalid", placeholder=user.broker_addr, value=user.broker_addr) }}
+					<div class="invalid-feedback">
+					{% for error in form.addr.errors %}
+						<span>{{ error }}</span>
+					{% endfor %}
+					</div>
+				{% else %}
+				{{ form.addr(class="form-control", placeholder=user.broker_addr, value=user.broker_addr) }}
+				{% endif %}
+				{{ form.port.label(class="form-control-label") }}
+				{% if form.port.error %}
+					{{ form.port(class="form-control is-invalid", placeholder=user.broker_port, value=user.broker_port) }}
+					<div class="invalid-feedback">
+					{% for error in form.port.errors %}
+						<span>{{ error }}</span>
+					{% endfor %}
+					</div>
+				{% else %}
+				{{ form.port(class="form-control", placeholder=user.broker_port, value=user.broker_port) }}
+				{% endif %}
+				{{ form.password.label(class="form-control-label") }}
+				{% if form.password.error %}
+					{{ form.password(class="form-control is-invalid") }}
+					<div class="invalid-feedback">
+					{% for error in form.password.errors %}
+						<span>{{ error }}</span>
+					{% endfor %}
+					</div>
+				{% else %}
+				{{ form.password(class="form-control") }}
+				{% endif %}
+  			</div>
+			{{ form.change(class="btn btn-primary", type="submit") }}
+		</form>
+	</div>
+{% endblock %}

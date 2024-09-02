@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+<script>
+const options = {
+  clean: true,
+}
+const client = mqtt.connect("ws://{{ user.broker_addr }}:{{ user.broker_port }}")
+
+client.on('connect', () => {
+  console.log("OK")
+})
+
+{% for device in devices %}
+client.subscribe("ZigbeeD894/{{ device.ieee_addr }}")
+{% endfor %}
+</script>
+	<div id="info_block" class="device-grid">
+		{% for device in devices %}
+		<a id="dev-link" href="/devices#deviceZigbeeD894_{{ device.ieee_addr }}">
+		<div class="white-block" id="info_content">
+			<p>{{ device.ieee_addr }}</p>
+		</div>
+		</a>
+		{% endfor %}
+	</div>
+{% endblock %}

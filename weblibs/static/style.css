@@ -1,0 +1,58 @@
+@keyframes shadowing {
+    from {box-shadow: 0;}
+    to {box-shadow: 0px 0px 10px 3px gray;}
+}
+
+body {
+	/*background-image: url("https://steamuserimages-a.akamaihd.net/ugc/940586530515504757/CDDE77CB810474E1C07B945E40AE4713141AFD76/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false");
+	background-size: cover;*/
+	background-color: #cfcdca;
+}
+
+#top_menu {
+	background-color: #7174a8;
+	padding-left: 2%;
+}
+
+#info_block {
+    font-family: arial;
+    padding: 10px;
+}
+
+.device-grid {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.white-block {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 10px;
+}
+
+.white-block:hover {
+    animation-name: shadowing;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+
+#first_block {
+	background-color: #7174a8;
+	height: 1%;
+}
+
+#LoginForm, #RegisterForm {
+	margin-top: 10%;
+	width: 60%;
+}
+
+#dev-link {
+    color: black;
+    text-decoration: none;
+}
